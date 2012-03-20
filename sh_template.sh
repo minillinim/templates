@@ -5,7 +5,7 @@
 #    
 #    <one line to give the program's name and a brief idea of what it does.>
 #
-#    Copyright (C) 2011 Michael Imelfort
+#    Copyright (C) 2012 Michael Imelfort
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,15 +23,19 @@
 ###############################################################################
 
 # get opts
+# 
+# params with values are followed by a value "i:o:h" -> -i IN -o OUT or just -h
+#
 usage="Usage: $0 -<<add here>> [-h]"
 no_opts=1
 while getopts "<<add here>>h" o; do       
     case "$o" in
         h)  echo $usage; exit 1;;
+        #i) infile=$OPTARG;;
     esac
 done
 if [ "$no_opts" -eq "1" ]
 then
     echo $usage; exit 1
 fi
-
+# echo $infile
