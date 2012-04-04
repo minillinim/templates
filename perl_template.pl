@@ -89,7 +89,7 @@ sub checkParams {
     exec("pod2usage $0") if $options{'help'};
 
     # Compulsosy items
-    #if(!exists $options{''} ) { printParamError ""; }
+    #if(!exists $options{''} ) { printParamError (""); }
 
     return \%options;
 }
