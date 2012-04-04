@@ -28,6 +28,7 @@ use warnings;
 
 #core Perl modules
 use Getopt::Long;
+use Carp;
 
 #CPAN modules
 
@@ -40,6 +41,16 @@ BEGIN {
     $| = 1;
 }
 
+# edit here to log all external commands 
+my $global_log_commands = 0;
+
+# ext command failure levels
+use constant {
+    IGNORE_FAILURE => 0,
+    WARN_ON_FAILURE => 1,
+    DIE_ON_FAILURE => 2
+};
+
 # get input params and print copyright
 printAtStart();
 my $global_options = checkParams();
@@ -48,20 +59,21 @@ my $global_options = checkParams();
 # CODE HERE
 ######################################################################
 
-
 ######################################################################
 # CUSTOM SUBS
 ######################################################################
 
-
 ######################################################################
 # TEMPLATE SUBS
+
 ######################################################################
+# PARAMETERS
+
 sub checkParams {
     #-----
     # Do any and all options checking here...
     #
-    my @standard_options = ( "help|h+" );
+    my @standard_options = ( "help|h+");
     my %options;
 
     # Add any other command line options, and the code to handle them
@@ -70,49 +82,25 @@ sub checkParams {
 
     # if no arguments supplied print the usage and exit
     #
-    exec("pod2usage $0") if (0 == (keys (%options) ));
+    #exec("pod2usage $0") if (0 == (keys (%options) ));
 
     # If the -help option is set, print the usage and exit
     #
     exec("pod2usage $0") if $options{'help'};
 
     # Compulsosy items
-    #if(!exists $options{''} ) { print "**ERROR: $0 : \n"; exec("pod2usage $0"); }
+    #if(!exists $options{''} ) { printParamError ""; }
 
     return \%options;
 }
 
-sub printAtStart {
-print<<"EOF";
----------------------------------------------------------------- 
- $0
- Copyright (C) Michael Imelfort
-    
- This program comes with ABSOLUTELY NO WARRANTY;
- This is free software, and you are welcome to redistribute it
- under certain conditions: See the source for more details.
----------------------------------------------------------------- 
-EOF
-}
-
-sub openWrite
+sub printParamError
 {
     #-----
-    # Open a file for writing
-    #
-    my ($fn) = @_;
-    open my $fh, ">", $fn or die "**ERROR: could not open file: $fn for writing $!\n";
-    return $fh;
-}
-
-sub openRead
-{   
-    #-----
-    # Open a file for reading
-    #
-    my ($fn) = @_;
-    open my $fh, "<", $fn or die "**ERROR: could not open file: $fn for reading $!\n";
-    return $fh;
+    # What to do if there's something wrong with a parameter
+    #  
+    my ($error) = @_;  
+    print "**ERROR: $0 : $error\n"; exec("pod2usage $0");
 }
 
 sub overrideDefault
@@ -126,6 +114,121 @@ sub overrideDefault
         return $global_options->{$option_name};
     }
     return $default_value;
+}
+
+######################################################################
+# FILE IO
+
+sub openWrite
+{
+    #-----
+    # Open a file for writing
+    #
+    my ($fn) = @_;
+    open my $fh, ">", $fn or croak "**ERROR: could not open file: $fn for writing $!\n";
+    return $fh;
+}
+
+sub openRead
+{   
+    #-----
+    # Open a file for reading
+    #
+    my ($fn) = @_;
+    open my $fh, "<", $fn or croak "**ERROR: could not open file: $fn for reading $!\n";
+    return $fh;
+}
+
+######################################################################
+# EXTERNAL COMMANDS
+#
+# checkAndRunCommand("ls", {
+#                          -a => ""
+#                          }, 
+#                          WARN_ON_FAILURE);
+
+sub checkFileExists {
+    #-----
+    # Does a file exists?
+    #
+    my ($file) = @_;
+    unless(-e $file) {
+        die "**ERROR: $0 : Cannot find:\n$file\n";
+    }
+}
+
+sub logExternalCommand
+{
+    #-----
+    # Log a command line command to the command line!
+    #
+    if(1 == $global_log_commands) {
+        print $_[0], "\n";
+    }
+}
+
+sub runExternalCommand
+{
+    #-----
+    # Run a command line command on the command line!
+    #
+    my ($cmd) = @_;
+    logExternalCommand($cmd);
+    system($cmd);
+}
+
+sub checkAndRunCommand
+{
+    #-----
+    # Run external commands more sanelier
+    # 
+    my ($cmd, $params, $failure_type) = @_;
+    
+    # check the command is in the path
+    if (system("which $cmd |> /dev/null")) {
+        handleCommandFailure($cmd, $failure_type)
+    }
+    
+    # join the parameters to the command
+    my $param_str = join " ", map { $_ . " " . $params->{$_}} keys %{$params};
+    my $cmd_str = $cmd . " " . $param_str;
+    
+    logExternalCommand($cmd_str);
+
+    # make sure that all went well    
+    if (system($cmd_str)) {
+         handleCommandFailure($cmd_str, $failure_type)
+    }
+}
+
+sub handleCommandFailure {
+    #-----
+    # What to do when all goes bad!
+    #
+    my ($cmd, $failure_type) = @_;
+    if (defined($failure_type)) {
+        if ($failure_type == DIE_ON_FAILURE) {
+            croak "**ERROR: $0 : " . $! . "\n";
+        } elsif ($failure_type == WARN_ON_FAILURE) {
+            carp "**WARNING: $0 : "  . $! . "\n";
+        }
+    }
+}
+
+######################################################################
+# MISC
+
+sub printAtStart {
+print<<"EOF";
+---------------------------------------------------------------- 
+ $0
+ Copyright (C) Michael Imelfort
+    
+ This program comes with ABSOLUTELY NO WARRANTY;
+ This is free software, and you are welcome to redistribute it
+ under certain conditions: See the source for more details.
+---------------------------------------------------------------- 
+EOF
 }
 
 __DATA__
