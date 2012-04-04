@@ -1,9 +1,4 @@
 #!/usr/bin/env python
-
-from optparse import OptionParser
-import sys
-from pprint import pprint
-
 ###############################################################################
 #
 #    __Script__Name__
@@ -25,6 +20,12 @@ from pprint import pprint
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+###############################################################################
+
+from optparse import OptionParser
+import sys
+from pprint import pprint
+
 ###############################################################################
 # CODE HERE
 ###############################################################################

@@ -5,7 +5,7 @@
 #    
 #    <one line to give the program's name and a brief idea of what it does.>
 #
-#    Copyright (C) 2012 Michael Imelfort
+#    Copyright (C) Michael Imelfort
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@ sub printAtStart {
 print<<"EOF";
 ---------------------------------------------------------------- 
  $0
- Copyright (C) 2012 Michael Imelfort
+ Copyright (C) Michael Imelfort
     
  This program comes with ABSOLUTELY NO WARRANTY;
  This is free software, and you are welcome to redistribute it
@@ -136,7 +136,7 @@ __DATA__
 
 =head1 COPYRIGHT
 
-   copyright (C) 2012 Michael Imelfort
+   copyright (C) Michael Imelfort
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
