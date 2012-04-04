@@ -82,13 +82,13 @@ sub checkParams {
 
     # if no arguments supplied print the usage and exit
     #
-    #exec("pod2usage $0") if (0 == (keys (%options) ));
+    exec("pod2usage $0") if (0 == (keys (%options) ));
 
     # If the -help option is set, print the usage and exit
     #
     exec("pod2usage $0") if $options{'help'};
 
-    # Compulsosy items
+    # Compulsory items
     #if(!exists $options{''} ) { printParamError (""); }
 
     return \%options;
@@ -153,7 +153,7 @@ sub checkFileExists {
     #
     my ($file) = @_;
     unless(-e $file) {
-        die "**ERROR: $0 : Cannot find:\n$file\n";
+        croak "**ERROR: $0 : Cannot find:\n$file\n";
     }
 }
 
