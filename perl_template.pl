@@ -167,6 +167,17 @@ sub logExternalCommand
     }
 }
 
+sub isCommandInPath
+{
+    #-----
+    # Is this command in the path?
+    #
+    my ($cmd, $failure_type) = @_;
+    if (system("which $cmd |> /dev/null")) {
+        handleCommandFailure($cmd, $failure_type);
+    }
+}
+
 sub runExternalCommand
 {
     #-----
@@ -184,10 +195,7 @@ sub checkAndRunCommand
     # 
     my ($cmd, $params, $failure_type) = @_;
     
-    # check the command is in the path
-    if (system("which $cmd |> /dev/null")) {
-        handleCommandFailure($cmd, $failure_type)
-    }
+    isCommandInPath($cmd, $failure_type);
     
     # join the parameters to the command
     my $param_str = join " ", map { $_ . " " . $params->{$_}} keys %{$params};
