@@ -192,22 +192,41 @@ sub checkAndRunCommand
 {
     #-----
     # Run external commands more sanelier
-    # 
+    #
     my ($cmd, $params, $failure_type) = @_;
     
     isCommandInPath($cmd, $failure_type);
     
     # join the parameters to the command
-    my $param_str = join " ", map { $_ . " " . $params->{$_}} keys %{$params};
+    my $param_str = join " ", map {formatParams($_)} @{$params};
+    
     my $cmd_str = $cmd . " " . $param_str;
     
     logExternalCommand($cmd_str);
 
-    # make sure that all went well    
+    # make sure that all went well
     if (system($cmd_str)) {
          handleCommandFailure($cmd_str, $failure_type)
     }
 }
+
+sub formatParams {
+
+    #---------
+    # Handles and formats the different ways of passing parameters to 
+    # checkAndRunCommand
+    #
+    my $ref = shift;
+    
+    if (ref($ref) eq "ARRAY") {
+        return join(" ", @{$ref});
+    } elsif (ref($ref) eq "HASH") {
+        return join(" ", map { $_ . " " . $ref->{$_}} keys %{$ref});
+    }
+    croak 'The elements of the $params argument in checkAndRunCommand can ' .
+        'only contain references to arrays or hashes\n';
+}
+
 
 sub handleCommandFailure {
     #-----
@@ -218,10 +237,11 @@ sub handleCommandFailure {
         if ($failure_type == DIE_ON_FAILURE) {
             croak "**ERROR: $0 : " . $! . "\n";
         } elsif ($failure_type == WARN_ON_FAILURE) {
-            carp "**WARNING: $0 : "  . $! . "\n";
+            carp "**WARNING: $0 : " . $! . "\n";
         }
     }
 }
+
 
 ######################################################################
 # MISC
