@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'bio-logger'
+require 'csv'
 
 SCRIPT_NAME = File.basename(__FILE__); LOG_NAME = SCRIPT_NAME.gsub('.rb','')
 
@@ -14,8 +15,7 @@ o = OptionParser.new do |opts|
   opts.banner = "
     Usage: #{SCRIPT_NAME} <arguments>
     
-    Description of what this program does...
-"
+    Description of what this program does...\n"
   # Example option
   opts.on("-e", "--eg", "description [default: #{options[:eg]}]") do |f|
     options[:operation] = OVERALL
