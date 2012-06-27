@@ -10,15 +10,14 @@ options = {
   :logger => 'stderr',
 }
 o = OptionParser.new do |opts|
-  #TODO Fill in usage, description and option parsing below
   opts.banner = "
     Usage: #{SCRIPT_NAME} <arguments>
     
-    Description of what this program does...\n"
-  # Example option
-  opts.on("-e", "--eg", "description [default: #{options[:eg]}]") do |f|
-    options[:operation] = OVERALL
-  end
+    Description of what this program does...\n\n"
+    
+    opts.on("-e", "--eg ARG", "description [default: #{options[:eg]}]") do |arg|
+      options[:example] = arg
+    end
   
   # logger options
   opts.on("-q", "--quiet", "Run quietly, set logging to ERROR level [default INFO]") {Bio::Log::CLI.trace('error')}
@@ -26,7 +25,7 @@ o = OptionParser.new do |opts|
   opts.on("--trace options",String,"Set log level [default INFO]. e.g. '--trace debug' to set logging level to DEBUG"){|s| Bio::Log::CLI.trace(s)}
 end
 o.parse!
-if ARGV.length != 0 #TODO require a set number of arguments?
+if ARGV.length != 0
   $stderr.puts o
   exit 1
 end
