@@ -16,16 +16,16 @@ if __FILE__ == $0 #needs to be removed if this script is distributed as part of 
       
       Description of what this program does...\n\n"
       
-      opts.on("-e", "--eg ARG", "description [default: #{options[:eg]}]") do |arg|
-        options[:example] = arg
-      end
-    
+    opts.on("-e", "--eg ARG", "description [default: #{options[:eg]}]") do |arg|
+      options[:example] = arg
+    end
+
     # logger options
+    opts.separator "\n\tVerbosity:\n\n"
     opts.on("-q", "--quiet", "Run quietly, set logging to ERROR level [default INFO]") {Bio::Log::CLI.trace('error')}
     opts.on("--logger filename",String,"Log to file [default #{options[:logger]}]") { |name| options[:logger] = name}
     opts.on("--trace options",String,"Set log level [default INFO]. e.g. '--trace debug' to set logging level to DEBUG"){|s| Bio::Log::CLI.trace(s)}
-  end
-  o.parse!
+  end; o.parse!
   if ARGV.length != 0
     $stderr.puts o
     exit 1

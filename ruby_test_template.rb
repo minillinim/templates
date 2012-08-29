@@ -10,7 +10,7 @@ $:.unshift File.join(File.dirname(__FILE__),'..')
 script_under_test = File.basename(__FILE__).gsub(/^test_/,'')
 require script_under_test
 def assert_equal(e,o); o.should eq(e); end
-path_to_script = File.join('..',script_under_test)
+path_to_script = File.join(File.dirname(__FILE__),'..',script_under_test)
 
 
 
@@ -25,12 +25,12 @@ describe script_under_test do
   it 'should open3 test' do
     seqs = %w(>scaffold1 AANNTGTG)
     
-    Open3.popen3(script_under_test) do |stdin, stdout, stderr|
+    Open3.popen3(path_to_script) do |stdin, stdout, stderr|
       stdin.puts seqs.join("\n")
       stdin.close
       
       err = stderr.readlines
-      raise err unless err == []
+      err.should eq([]), err.join("")
       answer = %w(>scaffold1_1_2 AA >scaffold1_5_8 TGTG).join("\n")+"\n"
       stdout.read.should eq(answer)
     end
