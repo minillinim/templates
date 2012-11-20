@@ -21,7 +21,7 @@ if __FILE__ == $0 #needs to be removed if this script is distributed as part of 
     end
 
     # logger options
-    opts.separator "\n\tVerbosity:\n\n"
+    opts.separator "\nVerbosity:\n\n"
     opts.on("-q", "--quiet", "Run quietly, set logging to ERROR level [default INFO]") {Bio::Log::CLI.trace('error')}
     opts.on("--logger filename",String,"Log to file [default #{options[:logger]}]") { |name| options[:logger] = name}
     opts.on("--trace options",String,"Set log level [default INFO]. e.g. '--trace debug' to set logging level to DEBUG"){|s| Bio::Log::CLI.trace(s)}
