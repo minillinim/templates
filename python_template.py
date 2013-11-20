@@ -38,7 +38,7 @@ import sys
 #import errno
 
 #import numpy as np
-#np.seterr(all='raise')     
+#np.seterr(all='raise')
 
 #import matplotlib as mpl
 #import matplotlib.pyplot as plt
@@ -62,14 +62,14 @@ def doWork( args ):
     """ Main wrapper"""
 
     """
-    # parse a file    
+    # parse a file
     try:
         with open(filename, "r") as fh:
             for line in fh:
                 print line
-    except: 
+    except:
         print "Error opening file:", filename, exc_info()[0]
-        raise    
+        raise
     """
 
     """
@@ -78,7 +78,7 @@ def doWork( args ):
     #-----
     # make a 3d plot
     ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(points[:,0], 
+    ax.scatter(points[:,0],
                points[:,1],
                points[:,2],
                #edgecolors='none',
@@ -86,7 +86,7 @@ def doWork( args ):
                #s=2,
                #marker='.'
                )
-    
+
     #-----
     # make a 2d plot
     fig = plt.figure()
@@ -97,10 +97,10 @@ def doWork( args ):
 
     #-----
     # show figure
-    plt.show()  
+    plt.show()
     # or save figure
     plt.savefig(filename,dpi=300,format='png')
-    
+
     #-----
     # clean up!
     plt.close(fig)
@@ -121,12 +121,12 @@ if __name__ == '__main__':
     #parser.add_argument('positional_arg2', type=int, help="Integer argument")
     #parser.add_argument('positional_arg3', nargs='+', help="Multiple values")
     #parser.add_argument('-X', '--optional_X', action="store_true", default=False, help="flag")
-    
+
     # parse the arguments
-    args = parser.parse_args()        
+    args = parser.parse_args()
 
     # do what we came here to do
-    return doWork(args)
+    doWork(args)
 
 ###############################################################################
 ###############################################################################
