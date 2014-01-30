@@ -34,6 +34,9 @@ __status__ = "Development"
 import argparse
 import sys
 
+from multiprocessing import Pool
+from subprocess import Popen, PIPE
+
 #import os
 #import errno
 
@@ -58,8 +61,25 @@ import sys
 ###############################################################################
 ###############################################################################
 
+def runCommand(cmd):
+    """Run a command and take care of stdout
+
+    expects 'cmd' to be a string like "foo -b ar"
+
+    returns (stdout, stderr)
+    """
+    p = Popen(cmd.split(' '), stdout=PIPE)
+    return p.communicate()
+
 def doWork( args ):
     """ Main wrapper"""
+
+    """
+    # run somethign external in threads
+    pool = Pool(6)
+    cmds = ['ls -l', 'ls -alh', 'ps -ef']
+    print pool.map(runCommand, cmds)
+    """
 
     """
     # parse a file
