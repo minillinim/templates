@@ -75,7 +75,7 @@ def doWork( args ):
     """ Main wrapper"""
 
     """
-    # run somethign external in threads
+    # run something external using a thread pool
     pool = Pool(6)
     cmds = ['ls -l', 'ls -alh', 'ps -ef']
     print pool.map(runCommand, cmds)
