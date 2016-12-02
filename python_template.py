@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-__script_name = "NAME ME"
+__script_name__ = "NAME ME"
 __version__ = "0.0.1"
 __maintainer__ = "Michael Imelfort"
 __email__ = "mike@mikeimelfort.com"
