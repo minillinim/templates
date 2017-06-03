@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+print_usage() {
+  echo "Usage: $0 [-q] [-p] [-h]"
+  echo ""
+  echo "  $0 -p cleans up"
+  echo ""
+}
+
+root_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+script_dir="${root_dir}/lib"
+current_dir=$(pwd)
+
+only_problems="0"
+purge="0"
+
+. "${script_dir}/print"
+. "${script_dir}/system"
+
+while getopts "hqp" o; do
+  case "$o" in
+    h) print_usage; exit 0;;
+    q) only_problems="1";;
+    p) purge="1";;
+  esac
+done
+
+. "${script_dir}/utils"
+if [[ "${purge}" == "1" ]]; then
+  cleanup
+else
+  build
+fi

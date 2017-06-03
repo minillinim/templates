@@ -1,0 +1,34 @@
+function build () {
+  msg_warning "Preparing to build C extensions:"
+  cd "${root_dir}"
+  target_dir="${root_dir}/bin"
+  mkdir -p "${target_dir}"
+  mkdir -p "${root_dir}/obj"
+  autoreconf --force --install
+  msg_info "Configuring..."
+  "${root_dir}/configure" -q --prefix="${target_dir}"
+  msg_info "Starting build..."
+  make
+  msg_success "C extensions Build complete"
+}
+
+function cleanup () {
+  msg_warning "Cleaning up:"
+  local manifest=$(cat "${root_dir}/MANIFEST" | tr -d "\n")
+  IFS=',' read -r -a files_to_keep <<< "${manifest}"
+  for target in $(ls ${root_dir}); do
+    should_keep="0"
+    for keep_file in ${files_to_keep[@]}; do
+      if [ "${keep_file}" = "${target}" ]; then
+        should_keep="1"
+      fi
+    done
+    if [ "${should_keep}" = "0" ]; then
+      msg_error "Removing: ${root_dir}/${target}"
+      rm -rf "${root_dir}/${target}"
+    else
+      msg_info "Keeping: ${root_dir}/${target}"
+    fi
+  done
+  msg_success "Done"
+}

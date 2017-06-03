@@ -1,0 +1,29 @@
+color_end='\e[0m'
+color_red='\e[0;31m'
+color_grn='\e[0;32m'
+color_yel='\e[0;33m'
+
+msg_info() {
+  if [ "${only_problems}" -eq "0" ]; then
+    echo "${1}"
+  fi
+}
+
+msg_error() {
+  printf "${color_red}${@}${color_end}"
+  printf "\n"
+}
+
+msg_success() {
+  if [ "${only_problems}" -eq "0" ]; then
+    printf "${color_grn}${@}${color_end}"
+    printf "\n"
+  fi
+}
+
+msg_warning() {
+  if [ "${only_problems}" -eq "0" ]; then
+    printf "${color_yel}${@}${color_end}"
+    printf "\n"
+  fi
+}
