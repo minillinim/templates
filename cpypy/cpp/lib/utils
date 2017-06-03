@@ -8,7 +8,7 @@ function build () {
   msg_info "Configuring..."
   "${root_dir}/configure" -q --prefix="${target_dir}"
   msg_info "Starting build..."
-  make
+  make "${make_opts}"
   msg_success "C extensions Build complete"
 }
 
