@@ -14,6 +14,9 @@ function build () {
 
 function cleanup () {
   msg_warning "Cleaning up:"
+  if [[ -e "Makefile" ]]; then
+    make clean
+  fi
   local manifest=$(cat "${root_dir}/MANIFEST" | tr -d "\n")
   IFS=',' read -r -a files_to_keep <<< "${manifest}"
   for target in $(ls ${root_dir}); do

@@ -4,7 +4,8 @@ set -euo pipefail
 print_usage() {
   echo "Usage: $0 [-q] [-p] [-h]"
   echo ""
-  echo "  $0 -p cleans up"
+  echo "  $0 -p       --> cleans up"
+  echo "  $0 -r cl    --> cleans up and reinstalls"
   echo ""
 }
 
@@ -14,15 +15,17 @@ current_dir=$(pwd)
 
 only_problems="0"
 purge="0"
+reset="0"
 
 . "${script_dir}/print"
 . "${script_dir}/system"
 
-while getopts "hqp" o; do
+while getopts "hqrp" o; do
   case "$o" in
     h) print_usage; exit 0;;
     q) only_problems="1";;
     p) purge="1";;
+    r) reset="1"; purge=1;;
   esac
 done
 
@@ -30,5 +33,9 @@ done
 if [[ "${purge}" == "1" ]]; then
   cleanup
 else
+  build
+fi
+
+if [[ "${reset}" == "1" ]]; then
   build
 fi

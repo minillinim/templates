@@ -1,33 +1,36 @@
 CC = g++
 
+LIB_OUT = lib/sample.a
+BIN_OUT = bin/sample
+
 INC_DIR := include/
 SRC_FILES := $(wildcard src/*.cpp)
 OBJ_FILES := $(addprefix obj/,$(notdir $(SRC_FILES:.cpp=.o)))
+DEP_FILES := $(addprefix lib/,$(notdir $(SRC_FILES:.cpp=.d)))
 
 CC_FLAGS = -g -fPIC -pthread -O2 -Wall -I$(INC_DIR)
 LIB_FLAGS = -static-libgcc -shared -Wl,-rpath
 LIBS = -lm
 
-LIB_OUT = lib/sample.a
-BIN_OUT = bin/sample
+.SUFFIXES: .cpp .o
 
 all: main
-default: main
 
-.SUFFIXES: .cpp .o
+default: main
 
 obj/%.o: src/%.cpp
 	$(CC) $(CC_FLAGS) -c -o $@ $<
 
 $(LIB_OUT): $(OBJ_FILES)
+	@echo "Building library"
 	@-rm -f $@
 	$(CC) $(CC_FLAGS) $(LIB_FLAGS) -o $@ $(SRC_FILES) $(LIBS)
 
 $(BIN_OUT): $(OBJ_FILES) $(LIB_OUT)
+	@echo "Building binary"
 	$(CC) $(LD_FLAGS) -o $@ $^
 
 lib_only: $(LIB_OUT)
-	@echo "Building library"
 
 main: $(BIN_OUT)
 
@@ -35,6 +38,7 @@ clean:
 	rm -f obj/*.o
 	rm -f $(LIB_OUT)
 	rm -f $(BIN_OUT)
+	rm -f $(DEP_FILES)
 
 CC_FLAGS += -MMD
 -include $(OBJ_FILES:.o=.d)
